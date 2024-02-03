@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  namespace :transactions do
+    get 'chargebacks/create'
+  end
+  resources :transactions, only: %i[create show] do
+    resources :chargebacks, only: %i[create]
+  end
 end
