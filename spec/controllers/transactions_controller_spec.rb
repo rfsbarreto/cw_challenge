@@ -1,11 +1,11 @@
-require_relative '../rails_helper'
+require 'rails_helper'
 
 RSpec.describe TransactionsController, type: :controller do
   let(:transaction_params) do
     {
       transaction_id: 2_342_357,
-      merchant_id: 29_744,
-      user_id: 97_051,
+      merchant_id: merchant.id,
+      user_id: user.id,
       card_number: '434505******9116',
       transaction_date: '2019-11-31T23:16:32.812632',
       transaction_amount: 373,
@@ -15,36 +15,64 @@ RSpec.describe TransactionsController, type: :controller do
 
   describe '#create' do
     let(:make_request) { post :create, params: transaction_params }
+    let(:user) { create(:user) }
+    let(:merchant) { create(:merchant) }
+
+    shared_examples 'returns a denied transaction' do
+      it 'returns a denied transaction' do
+        expect(JSON.parse(response.body))
+          .to eq({ 'transaction_id' => transaction_params[:transaction_id], 'recommendation' => 'denied' })
+      end
+    end
 
     before { make_request }
 
     context 'when params are valid' do
-      context 'when user and merchant exists' do
-        it 'returns http success' do
-          expect(response).to have_http_status(:success)
+      it 'returns http created' do
+        expect(response).to have_http_status(:success)
+      end
 
+      context 'when user and merchant exists and FraudCheck clear transaction' do
+        it 'returns a approved transaction' do
           expect(JSON.parse(response.body))
             .to eq({ 'transaction_id' => transaction_params[:transaction_id], 'recommendation' => 'approved' })
         end
 
         context 'when merchant is blocked for transactions' do
+          let(:merchant) { create(:merchant, block_transactions: true) }
+
+          it_behaves_like 'returns a denied transaction'
         end
 
         context 'when user is blocked for transactions' do
+          let(:user) { create(:user, block_transactions: true) }
+
+          it_behaves_like 'returns a denied transaction'
         end
 
         context 'when user has exceeded transaction limit' do
-        end
-        
-        context 'when user tried too many transactions under timeframe' do
+          it_behaves_like 'returns a denied transaction'
         end
 
+        context 'when user tried too many transactions under timeframe' do
+          it_behaves_like 'returns a denied transaction'
+        end
       end
 
       context 'when user doesnt exists' do
+        let(:user) { Struct.new(:id).new(Faker::Number.number) }
+
+        it 'creates one' do
+          expect(User.find(user.id)).to be_present
+        end
       end
 
       context 'when merchant doesnt exists' do
+        let(:merchant) { Struct.new(:id).new(Faker::Number.number) }
+
+        it 'creates one' do
+          expect(Merchant.find(merchant.id)).to be_present
+        end
       end
     end
 
