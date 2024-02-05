@@ -20,7 +20,7 @@ module Transactions
     private
 
     def transaction_above_user_limit?
-      false
+      transaction[:amount] > @user.max_transaction_amount
     end
 
     def too_much_transactions_within_timeframe?
