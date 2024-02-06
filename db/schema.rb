@@ -43,7 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_193701) do
     t.float "total_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "max_transaction_amount", default: 10000.0, null: false
+    t.float "max_transaction_amount"
   end
 
 end
