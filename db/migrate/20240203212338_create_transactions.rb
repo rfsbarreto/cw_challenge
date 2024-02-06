@@ -5,6 +5,7 @@ class CreateTransactions < ActiveRecord::Migration[7.0]
       t.datetime :transaction_date, null: false
       t.decimal :transaction_amount, null: false
       t.integer :device_id, null: true
+      t.boolean :chargebacked, null: false, default: false
       t.references :user, null: false
       t.references :merchant, null: false
 

@@ -28,6 +28,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_193701) do
     t.datetime "transaction_date", null: false
     t.decimal "transaction_amount", null: false
     t.integer "device_id"
+    t.boolean "chargebacked", default: false, null: false
     t.bigint "user_id", null: false
     t.bigint "merchant_id", null: false
     t.datetime "created_at", null: false
