@@ -3,7 +3,7 @@ class CreateUsers < ActiveRecord::Migration[7.0]
     create_table :users do |t|
       t.integer :number_transactions, null: false, default: 0
       t.boolean :block_transactions, null: false, default: false
-      t.float :total_value, null: false, default: 0.0
+      t.decimal :total_value, null: false, default: 0.0
 
       t.timestamps
     end

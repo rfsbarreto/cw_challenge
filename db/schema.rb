@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_193701) do
     t.integer "number_transactions", default: 0, null: false
     t.boolean "block_transactions", default: false, null: false
     t.integer "number_chargebacks", default: 0, null: false
-    t.float "total_value", default: 0.0, null: false
+    t.decimal "total_value", default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -26,7 +26,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_193701) do
   create_table "transactions", force: :cascade do |t|
     t.string "card_number", null: false
     t.datetime "transaction_date", null: false
-    t.float "transaction_amount", null: false
+    t.decimal "transaction_amount", null: false
     t.integer "device_id"
     t.bigint "user_id", null: false
     t.bigint "merchant_id", null: false
@@ -39,11 +39,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_05_193701) do
 
   create_table "users", force: :cascade do |t|
     t.integer "number_transactions", default: 0, null: false
-    t.boolean "block_transactions"
-    t.float "total_value"
+    t.boolean "block_transactions", default: false, null: false
+    t.decimal "total_value", default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.float "max_transaction_amount"
+    t.decimal "max_transaction_amount"
   end
 
 end

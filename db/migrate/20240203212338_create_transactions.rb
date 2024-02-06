@@ -3,7 +3,7 @@ class CreateTransactions < ActiveRecord::Migration[7.0]
     create_table :transactions do |t|
       t.string :card_number, null: false
       t.datetime :transaction_date, null: false
-      t.float :transaction_amount, null: false
+      t.decimal :transaction_amount, null: false
       t.integer :device_id, null: true
       t.references :user, null: false
       t.references :merchant, null: false
