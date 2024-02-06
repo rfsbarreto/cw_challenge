@@ -1,17 +1,21 @@
-class Transactions::ChargebackController < ApplicationController
-  def create
-    execute_chargeback = Transactions::ExecuteChargeback.new(transaction_id: chargeback_params['transaction_id'])
+# frozen_string_literal: true
 
-    if execute_chargeback.run
-      head :created
-    else
-      head :unprocessable_entity
+module Transactions
+  class ChargebackController < ApplicationController
+    def create
+      execute_chargeback = Transactions::ExecuteChargeback.new(transaction_id: chargeback_params['transaction_id'])
+
+      if execute_chargeback.run
+        head :created
+      else
+        head :unprocessable_entity
+      end
     end
-  end
 
-  private
+    private
 
-  def chargeback_params
-    params.permit(:transaction_id)
+    def chargeback_params
+      params.permit(:transaction_id)
+    end
   end
 end
