@@ -3,11 +3,10 @@ require 'rails_helper'
 RSpec.describe Transactions::ExecuteChargeback do
   let(:transaction) { create(:transaction) }
   let(:transaction_id) { transaction.id }
-  let(:chargebacked) { true }
   let(:user) { transaction.user }
   let(:merchant) { transaction.merchant }
 
-  subject(:execute_chargeback) { Transactions::ExecuteChargeback.new(transaction_id:, chargebacked:) }
+  subject(:execute_chargeback) { Transactions::ExecuteChargeback.new(transaction_id:) }
 
   context 'when the service object runs successfully' do
     it 'returns true' do

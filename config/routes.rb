@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
   resources :transactions, only: %i[create show] do
-    resources :chargebacks, only: %i[create]
+    post :chargeback, to: 'transactions/chargeback#create'
   end
 end
