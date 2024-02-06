@@ -2,6 +2,9 @@
 
 module Transactions
   class FraudCheck
+    TRANSACTIONS_TIMEFRAME = 2.minutes
+    MAX_TRANSACTIONS_PER_TIMEFRAME = 3
+
     def initialize(transaction:, user:, merchant:)
       @transaction = transaction
       @user = user
@@ -20,11 +23,15 @@ module Transactions
     private
 
     def transaction_above_user_limit?
-      transaction[:amount] > @user.max_transaction_amount
+      @transaction.transaction_amount > @user.transaction_amount_limit
     end
 
     def too_much_transactions_within_timeframe?
-      false
+      number_of_transactions = @user
+                               .transactions
+                               .number_of_transactions_by_timeframe(time_in_seconds: TRANSACTIONS_TIMEFRAME)
+
+      number_of_transactions > MAX_TRANSACTIONS_PER_TIMEFRAME
     end
   end
 end

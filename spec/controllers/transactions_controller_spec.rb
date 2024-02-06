@@ -7,8 +7,8 @@ RSpec.describe TransactionsController, type: :controller do
       merchant_id: merchant.id,
       user_id: user.id,
       card_number: '434505******9116',
-      transaction_date: '2019-11-31T23:16:32.812632',
-      transaction_amount: 373,
+      transaction_date: Time.now,
+      transaction_amount:,
       device_id: 285_475
     }
   end
@@ -17,6 +17,8 @@ RSpec.describe TransactionsController, type: :controller do
     let(:make_request) { post :create, params: transaction_params }
     let(:user) { create(:user) }
     let(:merchant) { create(:merchant) }
+    let(:transaction_amount) { 300 }
+    let(:create_transactions) {}
 
     shared_examples 'returns a denied transaction' do
       it 'returns a denied transaction' do
@@ -25,7 +27,11 @@ RSpec.describe TransactionsController, type: :controller do
       end
     end
 
-    before { make_request }
+    before do
+      create_transactions
+
+      make_request
+    end
 
     context 'when params are valid' do
       it 'returns http created' do
@@ -37,26 +43,31 @@ RSpec.describe TransactionsController, type: :controller do
           expect(JSON.parse(response.body))
             .to eq({ 'transaction_id' => transaction_params[:transaction_id], 'recommendation' => 'approved' })
         end
+      end
 
-        context 'when merchant is blocked for transactions' do
-          let(:merchant) { create(:merchant, block_transactions: true) }
+      context 'when merchant is blocked for transactions' do
+        let(:merchant) { create(:merchant, block_transactions: true) }
 
-          it_behaves_like 'returns a denied transaction'
+        it_behaves_like 'returns a denied transaction'
+      end
+
+      context 'when user is blocked for transactions' do
+        let(:user) { create(:user, block_transactions: true) }
+
+        it_behaves_like 'returns a denied transaction'
+      end
+
+      context 'when user has exceeded transaction limit' do
+        let(:user) { create(:user, max_transaction_amount: transaction_amount - 1) }
+        it_behaves_like 'returns a denied transaction'
+      end
+
+      context 'when user tried too many transactions under timeframe' do
+        let(:create_transactions) do
+          create_list(:transaction, 4, transaction_date: transaction_params[:transaction_date] - 10.seconds, user:)
         end
 
-        context 'when user is blocked for transactions' do
-          let(:user) { create(:user, block_transactions: true) }
-
-          it_behaves_like 'returns a denied transaction'
-        end
-
-        context 'when user has exceeded transaction limit' do
-          it_behaves_like 'returns a denied transaction'
-        end
-
-        context 'when user tried too many transactions under timeframe' do
-          it_behaves_like 'returns a denied transaction'
-        end
+        it_behaves_like 'returns a denied transaction'
       end
 
       context 'when user doesnt exists' do

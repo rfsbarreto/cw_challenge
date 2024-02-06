@@ -1,17 +1,20 @@
+# frozen_string_literal: true
+
 class TransactionsController < ApplicationController
   def create
-    transaction_params
     transaction = Transaction.new(transaction_params)
 
-    if transaction.valid?
-      ActiveRecord::Base.transaction do
-        user = User.find_or_create_by!(id: transaction[:user_id])
-        merchant = Merchant.find_or_create_by!(id: transaction[:merchant_id])
+    user = User.find_or_create_by!(id: transaction.user_id)
 
+    merchant = Merchant.find_or_create_by!(id: transaction.merchant_id)
+
+    if transaction.valid?
+
+      ActiveRecord::Base.transaction do
         fraud_check = Transactions::FraudCheck.new(transaction:, user:, merchant:)
 
         transaction.approved = fraud_check.transaction_cleared?
-                               
+
         transaction.save!
       end
       render json: { transaction_id: transaction.id, recommendation: transaction.recommendation }, status: :created

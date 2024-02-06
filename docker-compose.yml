@@ -19,3 +19,4 @@ services:
     environment:
       DB_USERNAME: admin
       DB_PASSWORD: mysecretpassword
+      DEFAULT_MAX_TRANSACTION_AMOUNT: 2000
