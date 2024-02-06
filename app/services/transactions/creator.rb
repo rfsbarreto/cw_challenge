@@ -14,16 +14,22 @@ module Transactions
 
         merchant = Merchant.find_or_create_by!(id: @transaction.merchant_id)
 
-        @transaction.approved = approve_transaction?(transaction: @transaction, user:, merchant:)
+        if @transaction.valid?
+          @transaction.approved = approve_transaction?(transaction: @transaction, user:, merchant:)
 
-        @transaction.save!
+          @transaction.save!
+        else
+          @errors = @transaction.errors.full_messages
+          @transaction = nil
+
+          raise ActiveRecord::Rollback, @errors.join(';')
+        end
       end
 
-      true
+      @transaction.present? 
     rescue StandardError => e
-      Rails.logger.error "Error trying to save transaction #{e.full_message}"
+      Rails.logger.error "Errors trying to save transaction: #{e.full_message}"
 
-      @errors = e.full_message
       @transaction = nil
       false
     end

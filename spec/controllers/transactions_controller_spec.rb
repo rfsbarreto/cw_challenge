@@ -98,8 +98,13 @@ RSpec.describe TransactionsController, type: :controller do
         }
       end
 
-      it 'returns http success' do
+      it 'returns unprocessable_entity' do
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'fill errors correctly' do
+        expected_errors = { 'errors' => ['User must exist', 'User can\'t be blank', 'Transaction amount can\'t be blank']}
+        expect(JSON.parse(response.body)).to match expected_errors
       end
     end
   end
