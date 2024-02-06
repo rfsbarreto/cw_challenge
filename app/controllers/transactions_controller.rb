@@ -2,24 +2,13 @@
 
 class TransactionsController < ApplicationController
   def create
-    transaction = Transaction.new(transaction_params)
+    creator = Transactions::Creator.new(transaction_params:)
 
-    user = User.find_or_create_by!(id: transaction.user_id)
-
-    merchant = Merchant.find_or_create_by!(id: transaction.merchant_id)
-
-    if transaction.valid?
-
-      ActiveRecord::Base.transaction do
-        fraud_check = Transactions::FraudCheck.new(transaction:, user:, merchant:)
-
-        transaction.approved = fraud_check.transaction_cleared?
-
-        transaction.save!
-      end
+    if creator.run
+      transaction = creator.transaction
       render json: { transaction_id: transaction.id, recommendation: transaction.recommendation }, status: :created
     else
-      render json: { errors: transaction.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: creator.errors }, status: :unprocessable_entity
     end
   end
 

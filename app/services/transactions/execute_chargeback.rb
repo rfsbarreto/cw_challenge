@@ -1,17 +1,15 @@
 module Transactions
   class ExecuteChargeback
-    def initialize(transaction_id:, chargebacked:)
+    def initialize(transaction_id:)
       @transaction_id = transaction_id
-      @chargebacked = chargebacked
-      @errors = []
     end
 
     def run
       ActiveRecord::Base.transaction do
         transaction = Transaction.find(@transaction_id)
 
-        transaction.update(chargebacked: @chargebacked)
-        update_user_block_transactions(user: transaction.user, should_block: @chargebacked)
+        transaction.update(chargebacked: true)
+        update_user_block_transactions(user: transaction.user)
         increment_merchant_chargebacks(merchant: transaction.merchant)
       end
 
@@ -22,8 +20,8 @@ module Transactions
 
     private
 
-    def update_user_block_transactions(user:, should_block:)
-      user.update!(block_transactions: should_block)
+    def update_user_block_transactions(user:)
+      user.update!(block_transactions: true)
     end
 
     def increment_merchant_chargebacks(merchant:)

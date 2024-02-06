@@ -5,7 +5,7 @@ RSpec.describe Transactions::CheckFraud, type: :model do
   let(:merchant) { build(:merchant) }
   let(:transaction) { build(:transaction, user:) }
 
-  let(:fraud_check) { Transactions::FraudCheck.new(transaction:, user:, merchant:) }
+  let(:fraud_check) { Transactions::CheckFraud.new(transaction:, user:, merchant:) }
 
   describe '#transaction_cleared?' do
     subject(:transaction_cleared?) { fraud_check.transaction_cleared? }
