@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Transactions
-  class FraudCheck
+  class CheckFraud
     TRANSACTIONS_TIMEFRAME = 2.minutes
     MAX_TRANSACTIONS_PER_TIMEFRAME = 3
 

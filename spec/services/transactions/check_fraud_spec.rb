@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Transactions::FraudCheck, type: :model do
+RSpec.describe Transactions::CheckFraud, type: :model do
   let(:user) { build(:user) }
   let(:merchant) { build(:merchant) }
   let(:transaction) { build(:transaction, user:) }
