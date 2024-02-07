@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: transactions
+#
+#  id                 :bigint           not null, primary key
+#  card_number        :string           not null
+#  transaction_date   :datetime         not null
+#  transaction_amount :decimal(, )      not null
+#  device_id          :integer
+#  chargebacked       :boolean          default(FALSE), not null
+#  user_id            :bigint           not null
+#  merchant_id        :bigint           not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  approved           :boolean          not null
+#
 FactoryBot.define do
   factory :transaction do
     id { Faker::Number.number }
