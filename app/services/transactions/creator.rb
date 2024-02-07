@@ -4,7 +4,13 @@ module Transactions
   # The Creator Service class is responsible for creating transactions and related records
   # please note that another service(Transactions::CheckFraud) is triggered during execution for fill approved attribute
   class Creator
-    attr_reader :transaction, :errors
+    # @!attribute [r] errors
+    #   @return [String] returns errors found during execution of Service
+    attr_reader :errors
+
+    # @!attribute [r] transaction
+    #   @return Transaction returns the persisted transaction
+    attr_reader :transaction
 
     # Initialize a new Creator instance with transaction params
     #
