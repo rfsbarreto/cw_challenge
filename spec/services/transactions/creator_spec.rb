@@ -48,8 +48,7 @@ RSpec.describe Transactions::Creator do
 
     context 'when an error occurs during transaction creation' do
       it 'logs the error and returns false' do
-        allow(Transaction).to receive(:new).and_raise(StandardError, 'Some error')
-        creator = described_class.new(transaction_params:)
+        allow(ActiveRecord::Base).to receive(:transaction).and_raise(StandardError, 'Some error')
 
         expect(Rails.logger).to receive(:error).with(/Some error/)
         expect(creator.run).to be_falsey
