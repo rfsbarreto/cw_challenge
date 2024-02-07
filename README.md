@@ -12,6 +12,7 @@ Follow these steps to run the Rails application inside a Docker container:
 
 ```bash
 docker-compose up --build
+docker-compose exec web rails db:setup
 
 ```
 
@@ -100,4 +101,4 @@ Under the timeline of the project I was not able to study enough to make a good 
 
 ## Challenge Questions and Data Analysis
 
-The answers for the Challenge questions can be found in the `answers` directory on `answers.pdf` file.
+The answers for the Challenge questions can be found in the `answers` directory on `answers.pdf` file. The Jupyter Notebook for the analysis could be found in `answers/CW_data_analysis.ipynb`

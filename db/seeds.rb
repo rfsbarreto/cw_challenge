@@ -1,7 +1,19 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
+require 'csv'
+
+csv_file_path = Rails.root.join('storage/transactional-sample.csv')
+
+Rails.logger.info 'Loading DataSample transactions'
+
+CSV.foreach(csv_file_path, headers: true) do |transaction|
+  transaction = transaction.to_h.deep_symbolize_keys
+  transaction[:chargebacked] = (transaction.delete(:has_cbk) == 'TRUE')
+  transaction[:transaction_amount] = BigDecimal(transaction[:transaction_amount])
+  transaction[:id] = transaction.delete(:transaction_id).to_i
+  %i[merchant_id user_id device_id].each do |field|
+    transaction[field] = transaction[field].to_i
+  end
+
+  creator = Transactions::Creator.new(transaction_params: transaction)
+
+  creator.run
+end
