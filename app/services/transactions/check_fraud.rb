@@ -1,16 +1,26 @@
 # frozen_string_literal: true
 
 module Transactions
+  # The CheckFraud Service class is responsible for checking if a transaction is fraudulent
   class CheckFraud
     SUBSEQUENT_TIMEFRAME = (ENV['SUBSEQUENT_TRANSACTIONS_TIMEFRAME'] || 2).to_i.minutes
     MAX_TRANSACTIONS_PER_TIMEFRAME = ENV['MAX_TRANSACTIONS_PER_TIMEFRAME'].to_i || 3
 
+    # Initialize the CheckFraud instance
+    #
+    # @param transaction [Transaction] The transaction to be checked
+    # @param user [User] The user associated with the transaction
+    # @param merchant [Merchant] The merchant associated with the transaction
     def initialize(transaction:, user:, merchant:)
       @transaction = transaction
       @user = user
       @merchant = merchant
     end
 
+    # Checks if the transaction should be cleared through 4
+    # predetermined rules
+    #
+    # @return [Boolean] true if the transaction is cleared, false otherwise
     def transaction_cleared?
       return false if @user.block_transactions?
       return false if @merchant.block_transactions?

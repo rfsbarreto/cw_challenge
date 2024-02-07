@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
 module Transactions
+  # The Creator Service class is responsible for creating transactions and related records
+  # please note that another service(Transactions::CheckFraud) is triggered during execution for fill approved attribute
   class Creator
     attr_reader :transaction, :errors
 
+    # Initialize a new Creator instance with transaction params
+    #
+    # @param transaction_params [Hash] The parameters for the transaction
     def initialize(transaction_params:)
       @transaction = Transaction.new(transaction_params)
     end
 
+    # Run the transaction creation process
+    #
+    # @return [Boolean] true if the transaction was successfully created, false otherwise
     def run
       ActiveRecord::Base.transaction do
         user = create_user_and_increment_transactions!
@@ -53,6 +61,12 @@ module Transactions
       merchant
     end
 
+    # Check if the transaction is cleared of fraud
+    #
+    # @param transaction [Transaction] The transaction to be checked
+    # @param user [User] The user associated with the transaction
+    # @param merchant [Merchant] The merchant associated with the transaction
+    # @return [Boolean] true if the transaction is cleared, false otherwise
     def approve_transaction?(transaction:, user:, merchant:)
       check_for_fraud = Transactions::CheckFraud.new(transaction:, user:, merchant:)
 
