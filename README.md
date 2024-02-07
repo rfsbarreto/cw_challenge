@@ -99,6 +99,10 @@ I applied 4  pre-determined rules into the approval ou deny of transaction:
 
 Under the timeline of the project I was not able to study enough to make a good and relevant model, but that is because I never did something like it since my graduation days. However the architecture is extensible enough to easily add a existent model or even call a service that predicts. It would need a new service `transactions/ml_model` , where you could chain his call inside `Transactions::CheckFraud` .
 
+## RDocs
+
+RDocs documentation could be found at `doc/` directory
+
 ## Challenge Questions and Data Analysis
 
 The answers for the Challenge questions can be found in the `answers` directory on `answers.pdf` file. The Jupyter Notebook for the analysis could be found in `answers/CW_data_analysis.ipynb`
