@@ -3,7 +3,7 @@
 module Transactions
   class ChargebackController < ApplicationController
     def create
-      execute_chargeback = Transactions::ExecuteChargeback.new(transaction_id: chargeback_params['transaction_id'])
+      execute_chargeback = Transactions::ExecuteChargeback.new(transaction_id: params[:id])
 
       if execute_chargeback.run
         head :created
