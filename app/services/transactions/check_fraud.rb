@@ -15,7 +15,7 @@ module Transactions
       return false if @user.block_transactions?
       return false if @merchant.block_transactions?
       return false if transaction_above_user_limit?
-      return false if too_much_transactions_within_timeframe?
+      return false if too_much_transactions_within_timeframe?(transaction_date: @transaction.transaction_date)
 
       true
     end
@@ -26,10 +26,13 @@ module Transactions
       @transaction.transaction_amount > @user.transaction_amount_limit
     end
 
-    def too_much_transactions_within_timeframe?
+    def too_much_transactions_within_timeframe?(transaction_date:)
       number_of_transactions = @user
                                .transactions
-                               .number_of_transactions_by_timeframe(time_in_seconds: TRANSACTIONS_TIMEFRAME)
+                               .number_of_transactions_by_timeframe(
+                                 start_time: transaction_date - TRANSACTIONS_TIMEFRAME,
+                                 end_time: transaction_date
+                               )
 
       number_of_transactions > MAX_TRANSACTIONS_PER_TIMEFRAME
     end

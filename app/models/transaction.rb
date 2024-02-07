@@ -23,8 +23,8 @@ class Transaction < ApplicationRecord
   validates_presence_of :merchant_id, :user_id, :card_number, :transaction_date, :transaction_amount
 
   scope :by_user, ->(user_id) { where(user_id:) }
-  scope :number_of_transactions_by_timeframe, lambda { |time_in_seconds:|
-                                                where(transaction_date: (Time.now - time_in_seconds)..Time.now).count
+  scope :number_of_transactions_by_timeframe, lambda { |start_time:, end_time:|
+                                                where(transaction_date: start_time..end_time).count
                                               }
   scope :with_chargeback, -> { where(chargebacked: true) }
   scope :weekly, -> { where(transaction_date: 1.week.ago..Time.now) }

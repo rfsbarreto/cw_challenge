@@ -33,7 +33,7 @@ RSpec.describe Transaction, type: :model do
 
     describe '.number_of_transactions_by_timeframe' do
       subject(:number_of_transactions_by_timeframe) do
-        Transaction.number_of_transactions_by_timeframe(time_in_seconds: 66.minutes)
+        Transaction.number_of_transactions_by_timeframe(start_time: Time.now - 66.minutes, end_time: Time.now)
       end
       let!(:transaction1) { create(:transaction, transaction_date: 1.hour.ago) }
       let!(:transaction2) { create(:transaction, transaction_date: 2.hours.ago) }
