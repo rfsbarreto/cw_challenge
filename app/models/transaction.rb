@@ -21,6 +21,7 @@ class Transaction < ApplicationRecord
   belongs_to :merchant
 
   validates_presence_of :merchant_id, :user_id, :card_number, :transaction_date, :transaction_amount
+  validates :id, uniqueness: true
 
   scope :by_user, ->(user_id) { where(user_id:) }
   scope :number_of_transactions_by_timeframe, lambda { |start_time:, end_time:|
