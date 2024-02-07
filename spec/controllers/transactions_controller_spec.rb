@@ -103,7 +103,8 @@ RSpec.describe TransactionsController, type: :controller do
       end
 
       it 'fill errors correctly' do
-        expected_errors = { 'errors' => ['User must exist', 'User can\'t be blank', 'Transaction amount can\'t be blank']}
+        expected_errors = { 'errors' => ['User must exist', 'User can\'t be blank',
+                                         'Transaction amount can\'t be blank'] }
         expect(JSON.parse(response.body)).to match expected_errors
       end
     end
