@@ -8,7 +8,7 @@ module Transactions
       if execute_chargeback.run
         head :created
       else
-        head :unprocessable_entity
+        render json: { errors: execute_chargeback.errors }, status: :unprocessable_entity
       end
     end
 

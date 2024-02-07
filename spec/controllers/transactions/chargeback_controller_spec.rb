@@ -23,8 +23,12 @@ RSpec.describe Transactions::ChargebackController, type: :controller do
     context 'when transaction doesnt exist' do
       let(:transaction) { Struct.new(:id).new(-1) }
 
-      it 'returns created status' do
+      it 'returns unprocessable_entity status' do
         expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns errors' do
+        expect(JSON.parse(response.body)).to eq({ 'errors' => ["Couldn't find Transaction with 'id'=#{transaction.id}"] })
       end
     end
   end
