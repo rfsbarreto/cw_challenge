@@ -11,8 +11,10 @@ module Transactions
 
       ActiveRecord::Base.transaction do
         user = User.find_or_create_by!(id: @transaction.user_id)
+        user.increment!(:number_transactions)
 
         merchant = Merchant.find_or_create_by!(id: @transaction.merchant_id)
+        merchant.increment!(:number_transactions)
 
         if @transaction.valid?
           @transaction.approved = approve_transaction?(transaction: @transaction, user:, merchant:)
@@ -26,7 +28,7 @@ module Transactions
         end
       end
 
-      @transaction.present? 
+      @transaction.present?
     rescue StandardError => e
       Rails.logger.error "Errors trying to save transaction: #{e.full_message}"
 
