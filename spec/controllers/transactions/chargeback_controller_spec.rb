@@ -6,7 +6,11 @@ RSpec.describe Transactions::ChargebackController, type: :controller do
   describe '#create' do
     let(:make_request) { post :create, params: chargeback_params }
 
-    before { make_request }
+    before do
+      allow(controller).to receive(:authenticate).and_return(nil) # skip authentication for tests
+
+      make_request
+    end
 
     context 'when params are valid' do
       let(:transaction) { create(:transaction) }

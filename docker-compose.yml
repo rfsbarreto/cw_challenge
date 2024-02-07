@@ -16,7 +16,12 @@ services:
       - "3000:3000"
     depends_on:
       - db
+    tty: true
+    stdin_open: true
+
     environment:
       DB_USERNAME: admin
       DB_PASSWORD: mysecretpassword
       DEFAULT_MAX_TRANSACTION_AMOUNT: 2000
+      CLOUDWALK_USERNAME: cloudwalk
+      CLOUDWALK_TOKEN: a_token

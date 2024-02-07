@@ -30,6 +30,7 @@ RSpec.describe TransactionsController, type: :controller do
     before do
       create_transactions
 
+      allow(controller).to receive(:authenticate).and_return(nil) # skip authentication for tests
       make_request
     end
 
