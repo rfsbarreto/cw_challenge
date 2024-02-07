@@ -2,8 +2,8 @@
 
 module Transactions
   class CheckFraud
-    TRANSACTIONS_TIMEFRAME = 2.minutes
-    MAX_TRANSACTIONS_PER_TIMEFRAME = 3
+    SUBSEQUENT_TIMEFRAME = (ENV['SUBSEQUENT_TRANSACTIONS_TIMEFRAME'] || 2).to_i.minutes
+    MAX_TRANSACTIONS_PER_TIMEFRAME = ENV['MAX_TRANSACTIONS_PER_TIMEFRAME'].to_i || 3
 
     def initialize(transaction:, user:, merchant:)
       @transaction = transaction
@@ -30,7 +30,7 @@ module Transactions
       number_of_transactions = @user
                                .transactions
                                .number_of_transactions_by_timeframe(
-                                 start_time: transaction_date - TRANSACTIONS_TIMEFRAME,
+                                 start_time: transaction_date - SUBSEQUENT_TIMEFRAME,
                                  end_time: transaction_date
                                )
 
